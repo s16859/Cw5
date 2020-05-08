@@ -9,6 +9,7 @@ using Cw5.Models;
 using Cw5.Services;
 using System.Data.SqlTypes;
 using System.Globalization;
+using System.Data;
 
 namespace Cw5.Controllers
 {
@@ -176,11 +177,24 @@ namespace Cw5.Controllers
 
             if(result2.Count!=0)
             {
-                return Ok("taki wpis jest");
+                com = new SqlCommand()
+                {
+                    CommandText = "procedurePromoteStudents",
+                    CommandType = CommandType.StoredProcedure,
+                };
+
+                com.Parameters.AddWithValue("semester", promotionRequest.Semester);
+                com.Parameters.AddWithValue("idStudy", idStudy);
+                
+                dbservice.ExecuteInsert(com);
+
+                return Ok();
+            }
+            else
+            {
+                return NotFound("Brak takich wpisow");
             }
 
-            
-            return Ok("promo");
         }
 
     }
